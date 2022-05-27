@@ -1,0 +1,17 @@
+{% extends 'movie/base.html' %}
+
+{% block content %}
+            <div class="col-4 offset-1">
+                <h2>Информация</h2>
+                {% for info in all_info %}
+
+                <div class="mt-5 gray">
+                    <b>Название</b> {{info.title}}<br>
+                    <b>Год</b> {{info.year}}<br>
+                    <img src="{{info.poster}}">
+
+                </div>
+                {% endfor %}
+            </div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'movie/base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-5 offset-1">
+                <h2>Название фильма</h2>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <label for="name">Поиск</label>
+                    {{ form.name }}
+<!--                  <input type="text" id="movie" class="form-control" name="movie" placeholder="Введите название">-->
+                    <input type="submit" name="send" value="Узнать" class="mt-2 btn btn-danger">
+
+                </form>
+
+            </div>
+            <div class="col-4 offset-1">
+                <h2>Информация</h2>
+                {% for info in all_info %}
+
+                <div class="mt-5 gray">
+                    <b>Название</b> {{info.title}}<br>
+                    <b>Год</b> {{info.year}}<br>
+                    <img src="{{info.poster}}">
+                    <a href="{{ info.get_absolute_url }}"> TEST</a>
+                </div>
+                {% endfor %}
+                {% for i in all_info %}
+                <a href="{{ i.get_absolute_url }}"> TEST</a>
+                <img src="{{i.poster}}">
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+
+{% endblock %}
