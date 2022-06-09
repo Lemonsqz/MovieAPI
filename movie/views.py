@@ -4,6 +4,7 @@ from .models import Movie
 from .forms import MovieForm
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic import DetailView
+from .serializers import *
 
 
 def index(request):
@@ -13,34 +14,36 @@ def index(request):
     try:
         if request.method == 'POST':
             form = MovieForm(request.POST)
+            N = request.POST['name']
             print(request.POST['name'])  # тестовая запись POST
 
         res = requests.get(url.format(str(request.POST['name']))).json()
         if str(request.POST['name']) not in str(Movie.objects.values_list('name')):  # чекаем чтоб небыло дубляжа
             if res['Response'] == 'True':
-                form.save()  # сохр в админке
+                for i in res['Search']:
+                    if i['Title'] not in str(Movie.objects.values_list('Title')):
+                        Movie.objects.create(
+                            name=i['Title'], Title=i['Title'],
+                            Year=i['Year'], Type=i['Type'], Poster=i['Poster'],
+                            slug=i['imdbID']
+                        )  # сохр в админке
+                # form.save()  # сохр в админке
 
         form = MovieForm()  # сброс поля
 
-        movies = Movie.objects.all()
 
-        all_movies = []
+        movies = Movie.objects.filter(name__startswith=str(N))
 
-        if res['Response'] == 'True':
-            film_info = {
-                'title': res['Search'][0]['Title'],
-                'year': res['Search'][0]['Year'],
-                # 'plot': res['Search'][0]['Plot'],
-                'poster': res['Search'][0]['Poster'],
+        # result =[]
+        # for i in Movie.objects.value('name'):
+        #     if str(N).lower() in str(i).lower():
+        #         result.append(i['name'])
 
-                'response': res['Response']
+        # print(requests.get(url.format(str(request.POST['name']))).text)
+        print(res['Search'])
+        print('test')
 
-            }
-
-            all_movies.append(film_info)
-        print(requests.get(url.format(str(request.POST['name']))).text)
         context = {
-            'all_info': all_movies,
             'form': form,
             'movie_list': movies,
         }
@@ -54,4 +57,3 @@ class MovieDetailView(DetailView):
     model = Movie
     template_name = 'movie/movie_details.html'
     context_object_name = 'movies'
-    slug_url_kwarg = 'slug'

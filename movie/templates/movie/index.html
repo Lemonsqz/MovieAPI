@@ -18,19 +18,21 @@
             </div>
             <div class="col-4 offset-1">
                 <h2>Информация</h2>
-                {% for info in all_info %}
+                {% for info in movie_list %}
 
                 <div class="mt-5 gray">
-                    <b>Название</b> {{info.title}}<br>
-                    <b>Год</b> {{info.year}}<br>
-                    <img src="{{info.poster}}">
-                    <a href="{{ info.get_absolute_url }}"> TEST</a>
+                    <b>Название:</b> {{info.Title}}<br>
+                    <b>Год:</b> {{info.Year}}<br>
+                    <b>Тип:</b> {{info.Type}}<br>
+                    <img src="{{info.Poster}}"><br>
+                    <a href="{{ info.get_absolute_url }}"> Подбробнее</a>
                 </div>
                 {% endfor %}
-                {% for i in all_info %}
-                <a href="{{ i.get_absolute_url }}"> TEST</a>
-                <img src="{{i.poster}}">
-                {% endfor %}
+<!--                {% for i in movie_list %}-->
+<!--                    <a href="{{ i.get_absolute_url }}"> TEST</a>-->
+<!--                    <img src="{{i.Poster}}">-->
+<!--&lt;!&ndash;                <img src="{{i.poster}}">&ndash;&gt;-->
+<!--                {% endfor %}-->
             </div>
         </div>
     </div>

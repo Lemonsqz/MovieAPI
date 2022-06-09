@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
-from .views import MovieDetailView
+from .views import *
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.index, name='home'),
-    path('movie/<str:slug>/', MovieDetailView.as_view(), name='movie_detail')
+    path('movie_detail/<slug>/', MovieDetailView.as_view(), name='movie_detail')
+
 ]
 
 if settings.DEBUG:
