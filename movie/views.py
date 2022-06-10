@@ -1,10 +1,12 @@
 import requests
+from .forms import CommentForm
 from django.shortcuts import render
-from .models import Movie
+from .models import Movie, Comment
 from .forms import MovieForm
 from django.utils.datastructures import MultiValueDictKeyError
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView
 from .serializers import *
+from django.urls import reverse_lazy
 
 
 def index(request):
@@ -31,7 +33,6 @@ def index(request):
 
         form = MovieForm()  # сброс поля
 
-
         movies = Movie.objects.filter(name__startswith=str(N))
 
         # result =[]
@@ -57,3 +58,15 @@ class MovieDetailView(DetailView):
     model = Movie
     template_name = 'movie/movie_details.html'
     context_object_name = 'movies'
+
+
+class AddCommentView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'movie/add_comment.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.movies_id = self.kwargs['pk']
+        return super().form_valid(form)
+

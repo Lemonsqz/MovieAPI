@@ -1,5 +1,6 @@
 from django.db import models
 from django.shortcuts import reverse
+from django.utils import timezone
 
 
 # Create your models here.
@@ -21,4 +22,18 @@ class Movie(models.Model):
 
 
 class Comment(models.Model):
-    body = models.TextField(max_length=100)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='comments', null=True)
+    body = models.TextField(max_length=100, blank=True, verbose_name='Комментарий')
+    name = models.CharField(max_length=70, blank=True, verbose_name='Ваше имя')
+    email = models.EmailField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('created',)
+
+    def __str__(self):
+        return 'Comment by {}'.format(self.name, self.movie)
+
+
