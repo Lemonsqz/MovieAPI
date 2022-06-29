@@ -12,13 +12,14 @@ def index(request):
     url = 'https://www.omdbapi.com/?s={}&apikey=' + apikey
     form = MovieForm()
     try:
+
         if request.method == 'POST':
             form = MovieForm(request.POST)
             N = request.POST['name']
             print(request.POST['name'])  # тестовая запись POST
 
         res = requests.get(url.format(str(request.POST['name']))).json()
-        if str(request.POST['name']) not in str(Movie.objects.values_list('name')):  # чекаем чтоб небыло дубляжа
+        if str(request.POST['name']).lower() not in str(Movie.objects.values_list('name')).lower():  # чекаем чтоб небыло дубляжа
             if res['Response'] == 'True':
                 for i in res['Search']:
                     if i['Title'] not in str(Movie.objects.values_list('Title')):
@@ -32,8 +33,7 @@ def index(request):
         form = MovieForm()  # сброс поля
 
 
-        movies = Movie.objects.filter(name__startswith=str(N))
-
+        movies = Movie.objects.filter(name__icontains=str(N))
         # result =[]
         # for i in Movie.objects.value('name'):
         #     if str(N).lower() in str(i).lower():
@@ -47,7 +47,7 @@ def index(request):
             'form': form,
             'movie_list': movies,
         }
-    except MultiValueDictKeyError:
+    except Exception:
         context = {'form': form}
 
     return render(request, 'movie/index.html', context)
