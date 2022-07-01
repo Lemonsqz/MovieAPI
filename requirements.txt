@@ -1,0 +1,4 @@
+django
+djangorestframework
+requests
+drf_writable_nested

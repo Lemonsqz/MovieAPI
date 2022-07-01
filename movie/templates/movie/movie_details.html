@@ -1,17 +1,55 @@
 {% extends 'movie/base.html' %}
 
 {% block content %}
-            <div class="col-4 offset-1">
-                <h2>Информация</h2>
+            <div class="row">
+                <div class="col-4 offset-1">
+                    <h2>Информация</h2>
 
 
-                <div class="mt-5 gray">
-                    <b>Название</b> {{movies.name}}<br>
-                    <b>Год</b> {{movies.Year}}<br>
-                    <img src="{{movies.Poster}}">
+                    <div class="mt-5 gray">
+                        <b>Название</b> {{movies.name}}<br>
+                        <b>Год</b> {{movies.Year}}<br><br/>
+                        <img src="{{movies.Poster}}">
+
+
+                    </div>
+                    <br/><br/>
+                    <hr>
+                    <h2>Comments...</h2>
+                    <br/>
+
+
+                    {% if not movies.comments.all %}
+                        Здесь еще нет комментариев...
+                        {% if user.is_authenticated %}
+                        <a href="#">Добавить комментарий</a>
+                        {% else %}
+                        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'login' %}">
+                            Для доавбления комментария необходимо войти
+                        </a>
+                        {% endif %}
+
+                    {% else %}
+                    <a href="{% url 'add_comment' %}">Add comment</a>
+                    <br/><br/>
+                        {% for comment in movies.comments.all %}
+                    <strong>
+                            {{ comment.name }}
+                            {{ comment.created }}
+                    </strong>
+                    <br/>
+                            {{ comment.body }}
+                    <br/><br/>
+                        {% endfor %}
+
+                    {% endif %}
+                </div>
+                <div class="col-5 offset-1">
+                    <h2></h2>
+
+
 
                 </div>
-
             </div>
 
 {% endblock %}

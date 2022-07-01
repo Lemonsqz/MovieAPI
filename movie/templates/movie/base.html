@@ -15,12 +15,19 @@
             </svg>
             <span class="fs-4" style="margin-left:10px">ПОИСК ФИЛЬМОВ</span>
           </a>
+          {% if user.is_authenticated %}
+            <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+                <a class="me-3 py-2 text-dark text-decoration-none" href="#">Главная</a>
+                <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'logout' %}">Выйти</a>
+            </nav>
+          {% else %}
+            <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+                <a class="me-3 py-2 text-dark text-decoration-none" href="#">Главная</a>
+                <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'login' %}">Вход</a>
+                <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'register' %}">Регистрация</a>
+            </nav>
+          {% endif %}
 
-          <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-            <a class="me-3 py-2 text-dark text-decoration-none" href="#">Главная</a>
-            <a class="me-3 py-2 text-dark text-decoration-none" href="#">Информация</a>
-            <a class="me-3 py-2 text-dark text-decoration-none" href="#">Поддержка</a>
-          </nav>
         </div>
     </div>
 </head>

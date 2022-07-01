@@ -1,0 +1,22 @@
+{% extends 'movie/base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-5 offset-1">
+                <h2>Login</h2>
+                <form action="" method="post">
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+                    <input type="submit" name="send" value="Login" class="mt-2 btn btn-danger">
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+{% endblock %}
