@@ -11,8 +11,13 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button class="btn btn-secondary">Отправить</button>
-
       </form>
     </div>
+
+<!--    javascript для идентификации зарегистрированного юзера-->
+    <script>
+        var name = "{{ user.id }}";
+        document.getElementById("elder").value= name;
+    </script>
   </div>
 {% endblock %}

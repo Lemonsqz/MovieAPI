@@ -4,9 +4,9 @@ from .models import Movie, Comment
 
 # Register your models here.
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'movie', 'created', 'active')
+    list_display = ('name', 'movie', 'created', 'active')
     list_filter = ('active', 'created', 'updated')
-    search_field = ('name', 'email', 'body')
+    search_field = ('name', 'body')
 
 
 admin.site.register(Movie)

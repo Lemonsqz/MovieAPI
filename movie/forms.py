@@ -16,9 +16,9 @@ class MovieForm(ModelForm):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ('name', 'body')
+        fields = ('name', 'body',)
 
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'body': forms.TextInput(attrs={'class': 'form-control'})
+            'name': forms.TextInput(attrs={'class': 'form-control', 'value': '', 'id': 'elder', 'type':'hidden'}),
+            'body': forms.Textarea(attrs={'class': 'form-control'})
         }

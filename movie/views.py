@@ -27,8 +27,8 @@ def index(request):
                     if i['Title'] not in str(Movie.objects.values_list('Title')):
                         Movie.objects.create(
                             name=i['Title'], Title=i['Title'],
-                            Year=i['Year'], Type=i['Type'], Poster=i['Poster'],
-                            slug=i['imdbID']
+                            Year=i['Year'], Type=i['Type'], Poster=i['Poster']
+
                         )  # сохр в админке
                 # form.save()  # сохр в админке
 
@@ -68,6 +68,6 @@ class AddCommentView(CreateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        form.instance.movies_id = self.kwargs['pk']
+        form.instance.movie_id = self.kwargs['pk']
         return super().form_valid(form)
 
