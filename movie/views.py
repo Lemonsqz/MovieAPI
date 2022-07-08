@@ -1,12 +1,14 @@
 import requests
 from .forms import CommentForm
 from django.shortcuts import render
-from .models import Movie, Comment
-from .forms import MovieForm
+from .models import Movie, Comment, UserMovieRating
+from .forms import MovieForm, RatingForm
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic import DetailView, CreateView
 from .serializers import *
 from django.urls import reverse_lazy
+from django.views.generic.base import View
+from django.http import HttpResponse
 
 
 def index(request):
@@ -21,7 +23,8 @@ def index(request):
             print(request.POST['name'])  # тестовая запись POST
 
         res = requests.get(url.format(str(request.POST['name']))).json()
-        if str(request.POST['name']).lower() not in str(Movie.objects.values_list('name')).lower():  # чекаем чтоб небыло дубляжа
+        if str(request.POST['name']).lower() not in str(
+                Movie.objects.values_list('name')).lower():  # чекаем чтоб небыло дубляжа
             if res['Response'] == 'True':
                 for i in res['Search']:
                     if i['Title'] not in str(Movie.objects.values_list('Title')):
@@ -36,12 +39,6 @@ def index(request):
 
         movies = Movie.objects.filter(name__icontains=str(N))
 
-        # result =[]
-        # for i in Movie.objects.value('name'):
-        #     if str(N).lower() in str(i).lower():
-        #         result.append(i['name'])
-
-        # print(requests.get(url.format(str(request.POST['name']))).text)
         print(res['Search'])
         print('test')
 
@@ -58,16 +55,45 @@ def index(request):
 class MovieDetailView(DetailView):
     model = Movie
     template_name = 'movie/movie_details.html'
+
     context_object_name = 'movies'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["star_form"] = RatingForm()
+        return context
 
 
 class AddCommentView(CreateView):
     model = Comment
     form_class = CommentForm
     template_name = 'movie/add_comment.html'
-    success_url = reverse_lazy('home')
 
+    # определяет текущий фильм
     def form_valid(self, form):
         form.instance.movie_id = self.kwargs['pk']
         return super().form_valid(form)
 
+
+class AddStarRating(View):
+
+
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+    def post(self, request):
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            UserMovieRating.objects.update_or_create(
+                ip=self.get_client_ip(request),
+                movie_id=int(request.POST.get("movie")),
+                defaults={'star_id': int(request.POST.get("star"))}
+            )
+            return HttpResponse(status=201)
+        else:
+            return HttpResponse(status=400)

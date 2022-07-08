@@ -35,3 +35,36 @@ class Comment(models.Model):
     def __str__(self):
         return '%s - %s' % (self.movie.Title, self.name)
 
+    def get_absolute_url(self):
+        return reverse("movie_detail", kwargs={
+            'pk': self.movie.id
+        })
+
+
+class RatingStar(models.Model):
+
+    value = models.SmallIntegerField("Значение", default=0)
+
+    def __str__(self):
+        return f'{self.value}'
+
+    class Meta:
+        verbose_name = "Звезда рейтинга"
+        verbose_name_plural = "Звезды рейтинга"
+        ordering = ["value"]
+
+
+class UserMovieRating(models.Model):
+
+    ip = models.CharField("IP адрес", max_length=15, null=True)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='rating', null=True)
+    star = models.ForeignKey(RatingStar, on_delete=models.CASCADE, verbose_name="звезда", null=True)
+
+
+    def __str__(self):
+        return f'{self.movie.Title}, {self.ip}, рейтинг: {self.star}'
+
+    def get_absolute_url(self):
+        return reverse("movie_detail", kwargs={
+            'pk': self.movie.id
+        })
