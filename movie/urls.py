@@ -10,6 +10,8 @@ urlpatterns = [
     path('movie/<int:pk>/', MovieDetailView.as_view(), name='movie_detail'),
     path('movie/<int:pk>/comment/', AddCommentView.as_view(), name='add_comment'),
     path("add-rating/", views.AddStarRating.as_view(), name='add_rating'),
+    path("favour/<int:id>/", views.favourite_add, name='favourite_add'),
+    path("favourites/", views.favourite_list, name='favourite_list'),
 
 ]
 

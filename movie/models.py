@@ -1,16 +1,15 @@
 from django.db import models
 from django.shortcuts import reverse
-from django.utils import timezone
 from django.contrib.auth.models import User
 
 
-# Create your models here.
 class Movie(models.Model):
     name = models.CharField(max_length=30, blank=True)
     Title = models.CharField(max_length=60, blank=True)
     Year = models.CharField(max_length=60, blank=True)
     Type = models.CharField(max_length=60, blank=True)
     Poster = models.CharField(max_length=1000, blank=True)
+    favourites = models.ManyToManyField(User, related_name='favourite', default=None, blank=True)
 
     def __str__(self):
         return self.name
@@ -29,6 +28,7 @@ class Comment(models.Model):
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
+
     class Meta:
         ordering = ('created',)
 
@@ -42,7 +42,6 @@ class Comment(models.Model):
 
 
 class RatingStar(models.Model):
-
     value = models.SmallIntegerField("Значение", default=0)
 
     def __str__(self):
@@ -55,11 +54,9 @@ class RatingStar(models.Model):
 
 
 class UserMovieRating(models.Model):
-
     ip = models.CharField("IP адрес", max_length=15, null=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='rating', null=True)
     star = models.ForeignKey(RatingStar, on_delete=models.CASCADE, verbose_name="звезда", null=True)
-
 
     def __str__(self):
         return f'{self.movie.Title}, {self.ip}, рейтинг: {self.star}'
@@ -68,3 +65,7 @@ class UserMovieRating(models.Model):
         return reverse("movie_detail", kwargs={
             'pk': self.movie.id
         })
+
+
+
+

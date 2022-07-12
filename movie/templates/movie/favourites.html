@@ -1,0 +1,26 @@
+{% extends 'movie/base.html' %}
+
+{% block content %}
+
+  <br/><br/>
+  <div class="col-5 offset-1">
+    <h1>Избранное</h1>
+      <br/><br/>
+    {% for info in new %}
+
+      <div class="mt-5 gray">
+          <b>Название:</b> {{info.Title}}<br>
+          <b>Год:</b> {{info.Year}}<br>
+          <b>Тип:</b> {{info.Type}}<br>
+          <img src="{{info.Poster}}"><br>
+          <a href="{{ info.get_absolute_url }}"> Подробнее</a>
+      </div>
+
+      <div>
+        <a href="{% url 'favourite_add' info.id %}" class="btn btn-outline-primary">Удалить из избранных</a>
+      </div>
+    {% endfor %}
+
+
+  </div>
+{% endblock %}

@@ -1,14 +1,12 @@
 import requests
 from .forms import CommentForm
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Movie, Comment, UserMovieRating
 from .forms import MovieForm, RatingForm
-from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic import DetailView, CreateView
 from .serializers import *
-from django.urls import reverse_lazy
 from django.views.generic.base import View
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 
 def index(request):
@@ -60,7 +58,9 @@ class MovieDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context["star_form"] = RatingForm()
+
         return context
 
 
@@ -76,7 +76,6 @@ class AddCommentView(CreateView):
 
 
 class AddStarRating(View):
-
 
     def get_client_ip(self, request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -97,3 +96,17 @@ class AddStarRating(View):
             return HttpResponse(status=201)
         else:
             return HttpResponse(status=400)
+
+
+def favourite_add(request, id):
+    movie = get_object_or_404(Movie, id=id)
+    if movie.favourites.filter(id=request.user.id).exists():
+        movie.favourites.remove(request.user)
+    else:
+        movie.favourites.add(request.user)
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+def favourite_list(request):
+    new = Movie.objects.filter(favourites=request.user)
+    return render(request, 'movie/favourites.html', {'new': new})

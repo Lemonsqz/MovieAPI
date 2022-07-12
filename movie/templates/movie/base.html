@@ -17,12 +17,13 @@
           </a>
           {% if user.is_authenticated %}
             <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-                <a class="me-3 py-2 text-dark text-decoration-none" href="#">Главная</a>
+                <a class="me-3 py-2 text-dark text-decoration-none" href='{% url "home" %}'>Главная</a>
+                <a class="me-3 py-2 text-dark text-decoration-none" href='{% url "favourite_list" %}'>Избранное</a>
                 <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'logout' %}">Выйти</a>
             </nav>
           {% else %}
             <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-                <a class="me-3 py-2 text-dark text-decoration-none" href="#">Главная</a>
+                <a class="me-3 py-2 text-dark text-decoration-none" href='{% url "home" %}'>Главная</a>
                 <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'login' %}">Вход</a>
                 <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'register' %}">Регистрация</a>
             </nav>
